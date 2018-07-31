@@ -32,11 +32,16 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Configuration 默认实现 2012-5-8
  * 
  */
 public class DefaultConfig implements Configuration {
+
+	private static final Logger _LOGGER = LoggerFactory.getLogger(DefaultConfig.class);
 
 	/*
 	 * 分词器默认字典路径
@@ -74,15 +79,14 @@ public class DefaultConfig implements Configuration {
 	private DefaultConfig() {
 		props = new Properties();
 
-		InputStream input = this.getClass().getClassLoader()
-				.getResourceAsStream(FILE_NAME);
+		InputStream input = this.getClass().getClassLoader().getResourceAsStream(FILE_NAME);
 		if (input != null) {
 			try {
 				props.loadFromXML(input);
 			} catch (InvalidPropertiesFormatException e) {
-				e.printStackTrace();
+				_LOGGER.warn(FILE_NAME + "格式错误", e);
 			} catch (IOException e) {
-				e.printStackTrace();
+				_LOGGER.warn("找不到" + FILE_NAME, e);
 			}
 		}
 	}
